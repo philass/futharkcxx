@@ -1,6 +1,10 @@
-%token FNAME
+%token NAME
 %token ARGTYPE
-%token ARGNAME
+%token NAME
+%token PTR
+%token CONST
+%token STRUCT
+%token STRUCTTYPE
 
 %%
 
@@ -9,11 +13,19 @@ functions:
       |
       ;
 
-function: FNAME ' ' arg_list      { printf("%s ", $1); }
+function: type NAME '(' arg_list      { printf("%s ", $1); }
         ;
 
-arg_list: ARGTYPE ' ' ARGNAME ');'  { printf(" %s %s", $1, $3); }
-          | ARGTYPE ' ' ARGNAME ',' arg_list  { printf(" %s %s", $1, $3); }
+arg_list: ARGTYPE ARGNAME ')'  { printf(" %s %s", $1, $3); }
+        | ARGTYPE ' ' ARGNAME ',' arg_list  { printf(" %s %s", $1, $3); }
+        ;
+
+type: STRUCT NAME PTR 
+          | CONST ARGTYPE PTR
+          | CONST ARGTYPE
+          | ARGTYPE PTR
+          | ARGTYPE
+          | VOID
           ;
 
 %%
